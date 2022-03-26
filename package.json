@@ -2,10 +2,11 @@
   "name": "dashboard",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
+  "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./dist/index.js"
+    "dev": "nodemon ./dist/main.js",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,8 @@
   "dependencies": {
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "tslog": "^3.3.3"
   },
   "devDependencies": {
     "@types/express": "^4.17.13"
