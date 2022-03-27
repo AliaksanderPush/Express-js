@@ -1,19 +1,25 @@
-import express, { Express } from "express";
-import { UserController } from "./users/user.controller";
-import { ExeptionFilter } from "./errors/exeption.filter";
-import { Server } from "http";
-import { LoggerService } from "./logger/logger.service";
+import express, { Express } from 'express';
+import { UserController } from './users/user.controller';
+import { ExeptionFilter } from './errors/exeption.filter';
+import { ILogger } from './logger/logger.interface';
+import { Server } from 'http';
+import { injectable, inject } from 'inversify';
+import { TYPES } from './types';
+import { BodyParser, json } from 'body-parser';
+import 'reflect-metadata';
 
+@injectable()
 export class App {
-  app: Express;
-  server: Server;
-  port: number;
-  logger: LoggerService;
-  userController: UserController;
-  exeptionFilter: ExeptionFilter;
+	app: Express;
+	server: Server;
+	port: number;
+	// logger: ILogger;
+	// userController: UserController;
+	// exeptionFilter: ExeptionFilter;
 
+	/*
   constructor(
-    logger: LoggerService,
+    logger: ILogger,
     userController: UserController,
     exeptionFilter: ExeptionFilter
   ) {
@@ -23,20 +29,35 @@ export class App {
     this.userController = userController;
     this.exeptionFilter = exeptionFilter;
   }
+ */
+	constructor(
+		@inject(TYPES.ILogger) private logger: ILogger,
+		@inject(TYPES.UserController) private userController: UserController,
+		@inject(TYPES.ExeptionFilter) private exeptionFilter: ExeptionFilter,
+	) {
+		this.app = express();
+		this.port = 8000;
+		//this.logger = logger;
+		//this.userController = userController;
+		//this.exeptionFilter = exeptionFilter;
+	}
 
-  useRouters() {
-    console.log("ok");
-    this.app.use("/users", this.userController.router);
-  }
+	useRouters(): void {
+		this.app.use('/users', this.userController.router);
+	}
+	useMiddleware(): void {
+		this.app.use(json());
+	}
 
-  useExeptionFilters() {
-    this.app.use(this.exeptionFilter.catch.bind(this.exeptionFilter));
-  }
+	useExeptionFilters(): void {
+		this.app.use(this.exeptionFilter.catch.bind(this.exeptionFilter));
+	}
 
-  public async init() {
-    this.useRouters();
-    this.useExeptionFilters();
-    this.server = this.app.listen(this.port);
-    this.logger.log(`🚀 Server ready at http://localhost:${this.port}`);
-  }
+	public async init(): Promise<void> {
+		this.useMiddleware();
+		this.useRouters();
+		this.useExeptionFilters();
+		this.server = this.app.listen(this.port);
+		this.logger.log(`🚀 Server ready at http://localhost:${this.port}`);
+	}
 }
