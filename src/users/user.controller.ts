@@ -7,8 +7,9 @@ import { TYPES } from '../types';
 import { UserLoginDto } from '../dto/user-login.dto';
 import 'reflect-metadata';
 import { IUserController } from './userController.interface';
-import { User } from './user.entity';
 import { UserService } from './users.service';
+import { ValidateMidleWare } from '../common/validate.middleware';
+import { UserRegisterDto } from '../dto/user-register.dto';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -18,7 +19,12 @@ export class UserController extends BaseController implements IUserController {
 	) {
 		super(loggerServise);
 		this.bindRouters([
-			{ path: '/register', methot: 'post', func: this.register },
+			{
+				path: '/register',
+				methot: 'post',
+				func: this.register,
+				middlewares: [new ValidateMidleWare(UserRegisterDto)],
+			},
 			{ path: '/login', methot: 'post', func: this.login },
 		]);
 	}
@@ -38,7 +44,7 @@ export class UserController extends BaseController implements IUserController {
 	}
 
 	async register(
-		{ body }: Request<{}, {}, UserLoginDto>,
+		{ body }: Request<{}, {}, UserRegisterDto>,
 		res: Response,
 		next: NextFunction,
 	): Promise<void> {

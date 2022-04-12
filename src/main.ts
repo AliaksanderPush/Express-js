@@ -10,6 +10,8 @@ import 'reflect-metadata';
 import { UserService } from './users/users.service';
 import { IUserController } from './users/userController.interface';
 import { IUserService } from './users/userrs.service.interface';
+import { ConfigService } from './config/config.service';
+import { IConfigService } from './config/config.servise.innterface';
 //async function bootstrap() {
 /*
     const logger = new LoggerService();
@@ -24,11 +26,12 @@ import { IUserService } from './users/userrs.service.interface';
 
  */
 const appBindings = new ContainerModule((bind: interfaces.Bind) => {
-	bind<ILogger>(TYPES.ILogger).to(LoggerService);
+	bind<ILogger>(TYPES.ILogger).to(LoggerService).inSingletonScope();
 	bind<IExeptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilter);
 	bind<IUserController>(TYPES.UserController).to(UserController);
 	bind<App>(TYPES.Application).to(App);
-	bind<IUserService>(TYPES.UserService).to(UserService);
+	bind<IConfigService>(TYPES.ConfigService).to(ConfigService);
+	bind<IUserService>(TYPES.UserService).to(UserService).inSingletonScope();
 });
 
 function bootstrap() {

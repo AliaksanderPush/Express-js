@@ -5,5 +5,5 @@ export interface IControllerRoute {
 	path: string;
 	func: (req: Request, res: Response, next: NextFunction) => void;
 	methot: keyof Pick<Router, 'get' | 'post' | 'patch' | 'delete' | 'put'>;
-	middleware?: IMiddleware[];
+	middlewares?: IMiddleware[];
 }
