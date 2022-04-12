@@ -7,6 +7,9 @@ import { LoggerService } from './logger/logger.service';
 import { TYPES } from './types';
 import { UserController } from './users/user.controller';
 import 'reflect-metadata';
+import { UserService } from './users/users.service';
+import { IUserController } from './users/userController.interface';
+import { IUserService } from './users/userrs.service.interface';
 //async function bootstrap() {
 /*
     const logger = new LoggerService();
@@ -23,8 +26,9 @@ import 'reflect-metadata';
 const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<ILogger>(TYPES.ILogger).to(LoggerService);
 	bind<IExeptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilter);
-	bind<UserController>(TYPES.UserController).to(UserController);
+	bind<IUserController>(TYPES.UserController).to(UserController);
 	bind<App>(TYPES.Application).to(App);
+	bind<IUserService>(TYPES.UserService).to(UserService);
 });
 
 function bootstrap() {

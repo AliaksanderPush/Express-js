@@ -33,8 +33,10 @@ export abstract class BaseController {
 	protected bindRouters(routers: IControllerRoute[]) {
 		for (const router of routers) {
 			this.logger.log(`[${router.methot}] ${router.path}`);
+			const middleware = router.middleware?.map((m) => m.execute.bind(m));
 			const handler = router.func.bind(this);
-			this.router[router.methot](router.path, handler); // это тоже самое router.post("/login", userController.login);
+			const pipeLine = middleware ? [...middleware, handler] : handler;
+			this.router[router.methot](router.path, pipeLine);
 		}
 	}
 }
